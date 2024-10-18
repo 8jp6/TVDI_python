@@ -1,9 +1,12 @@
 import tkinter as tk
 
-class window(tk.Tk):
-    pass
+class Window(tk.Tk):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+
+
 def main():
-    root = tk.Tk()
+    root = Window()
     print(type(root))
     root.title('這是我的第一個視窗!')
     root.geometry('800x300')
@@ -13,9 +16,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-'''
-widget是什麼 module class method attribute property
-'''
