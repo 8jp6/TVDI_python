@@ -18,10 +18,12 @@ class Window(ThemedTk):
         btn3 = ttk.Button(topFrame,text="按鈕3",style="fontmid.TButton")
         btn3.pack(side='left',expand=True,fill='x',padx=10)
         topFrame.pack(padx=10,pady=(10,0),ipadx=10,ipady=10,expand=True,fill='x')
+        #end上框
 
         #下框
         bottomFrame = ttk.Frame(self,width=500,height=300,borderwidth=1,relief='groove')
         bottomFrame.pack(padx=10,pady=10)
+        #end下框
 
         #下左框
         leftbottomFrame1 = ttk.Frame(bottomFrame,width = 160, height=300,borderwidth=1,relief="groove")
@@ -32,6 +34,7 @@ class Window(ThemedTk):
         bottomleftbtn3 = ttk.Button(leftbottomFrame1,text="按鈕6",style="fontmid.TButton")
         bottomleftbtn3.pack(expand=True,fill='y',padx=10,pady=5,ipady=15)
         leftbottomFrame1.pack(padx=10,pady=10,side="left")
+        #end下左框
         
         #下中框
         bottombottomFrame2 = ttk.Frame(bottomFrame,width = 160, height=300,borderwidth=1,relief="groove")
@@ -42,6 +45,8 @@ class Window(ThemedTk):
         bottommidbtn3 = ttk.Button(bottombottomFrame2,text="按鈕9",style="fontmid.TButton")
         bottommidbtn3.pack(expand=True,fill='y',padx=10,pady=5,ipady=30)
         bottombottomFrame2.pack(padx=10,pady=10,side="left")
+        #end下中框
+
         #下右框
         rightbottomFrame3 = ttk.Frame(bottomFrame,width = 160, height=300,borderwidth=1,relief="groove")
         bottomrightbtn1 = ttk.Button(rightbottomFrame3,text="按鈕10",style="fontmid.TButton")
@@ -51,7 +56,7 @@ class Window(ThemedTk):
         bottomrightbtn3 = ttk.Button(rightbottomFrame3,text="按鈕12",style="fontmid.TButton")
         bottomrightbtn3.pack(expand=True,fill='y',padx=10,pady=5,ipady=23.3)
         rightbottomFrame3.pack(padx=10,pady=10,side="left")
-
+        #end下右框
 
 def main():
     window = Window(theme="black")
