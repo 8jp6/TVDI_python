@@ -65,7 +65,7 @@ class Window(ThemedTk):
         #================================end bottomframe==================================
 
     def user_click1(self):
-        self.btn1.configure(text="被按了")#self.呼叫attribute
+        self.btn1.configure(text="被按了")#加上self.呼叫attribute
         print("Hello!button1")
 
     def user_click2(self):
