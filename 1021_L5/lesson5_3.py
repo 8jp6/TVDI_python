@@ -23,19 +23,19 @@ class Window(ThemedTk):
         #==============bottomFrame===============
         bottomFrame = ttk.Frame(self)
         self.IIF = tk.StringVar()
-        def agreement_changed():
-            tk.messagebox.showinfo(title='Result',message=self.IIF.get())
+       
 
         ttk.Checkbutton(bottomFrame,
                         text='I agree',
-                        command=agreement_changed,
+                        command=self.agreement_changed,
                         variable=self.IIF,
                         onvalue='agree',
                         offvalue='disagree').pack()
         
         bottomFrame.pack(expand=True,fill='x',padx=20,pady=(0,20),ipadx=10,ipady=10)
         #==============end bottomFrame===============
-        
+    def agreement_changed(self):
+        showinfo(title='Result',message=self.IIF.get())
 
 def main():
     window = Window(theme="arc")
