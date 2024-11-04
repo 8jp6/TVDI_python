@@ -24,15 +24,19 @@ class Window(ThemedTk):
 
         #==============bottomFrame===============
         bottomFrame = ttk.Frame(self)
+        #==============selectedFrame===============
+
+        selectedFrame = ttk.Frame(self,padding=[10,10,10,10])
         sitenames = L7datasource.get_sitename()
         self.selected_site = tk.StringVar()
-        print(sitenames)
-
-        sitenames_cb = ttk.Combobox(bottomFrame,textvariable=self.selected_site)
+        sitenames_cb = ttk.Combobox(selectedFrame,textvariable=self.selected_site)
         sitenames_cb.configure(values=sitenames,state='readonly')
         sitenames_cb.set('選戰點')
         sitenames_cb.bind('<<ComboboxSelected>>',self.sitename_selected)
-        sitenames_cb.pack(side='left',expand=True,anchor='n')
+        sitenames_cb.pack(expand=True,anchor='n')
+
+        selectedFrame.pack(side='left',expand=True,fill='y',padx=(20,0))
+        #==============endselectedFrame===============
 
         columns = ('date', 'country','aqi','pm2.5','status','long','lat')
         self.tree = ttk.Treeview(bottomFrame,columns=columns, show='headings')
@@ -66,10 +70,7 @@ class Window(ThemedTk):
         for record in selected_data:
             self.tree.insert('','end',values=record)
 
-        
-
-
-
+            
 
     
 def download():
