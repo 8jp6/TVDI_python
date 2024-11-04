@@ -1,9 +1,10 @@
 import requests
 import sqlite3
-def get_sitename() ->list[str]:
+def get_sitename(county:str) ->list[str]:
     '''
     docString
     parameter:
+        county:城市名稱
     return:
         傳出所有的站點名稱
     '''
@@ -13,8 +14,9 @@ def get_sitename() ->list[str]:
         sql= '''
         SELECT DISTINCT sitename
         FROM records
+        WHERE county = ?
         '''
-        cursor.execute(sql)
+        cursor.execute(sql,(county,))
         sitenames = [items[0] for items in cursor.fetchall()]
 
     return sitenames
@@ -94,7 +96,7 @@ def get_county()->list[str]:
     return:
         傳出所有的城市名稱
     '''
-    conn = sqlite3.connect("AQI.db")
+    conn = sqlite3.connect("aqi2.db")
     with conn:
         # Create a cursor object to execute SQL commands
         cursor = conn.cursor()

@@ -26,16 +26,20 @@ class Window(ThemedTk):
         bottomFrame = ttk.Frame(self)
         #==============selectedFrame===============
 
-        selectedFrame = ttk.Frame(self,padding=[10,10,10,10])
-        sitenames = L7datasource.get_sitename()
-        self.selected_site = tk.StringVar()
-        sitenames_cb = ttk.Combobox(selectedFrame,textvariable=self.selected_site)
-        sitenames_cb.configure(values=sitenames,state='readonly')
-        sitenames_cb.set('選戰點')
-        sitenames_cb.bind('<<ComboboxSelected>>',self.sitename_selected)
-        sitenames_cb.pack(expand=True,anchor='n')
+        self.selectedFrame = ttk.Frame(self,padding=[10,10,10,10])
 
-        selectedFrame.pack(side='left',expand=True,fill='y',padx=(20,0))
+        countynames = L7datasource.get_county()
+        self.selected_site = tk.StringVar()
+        self.selected_county = tk.StringVar()
+        sitenames_cb = ttk.Combobox(self.selectedFrame,textvariable=self.selected_county)
+        sitenames_cb.configure(values=countynames,state='readonly')
+        sitenames_cb.set('選城市')
+        sitenames_cb.bind('<<ComboboxSelected>>',self.county_selected)
+        sitenames_cb.pack(anchor='n',pady=10)
+
+        self.listbox = None
+
+        self.selectedFrame.pack(side='left',expand=True,fill='y',padx=(20,0))
         #==============endselectedFrame===============
 
         columns = ('date', 'country','aqi','pm2.5','status','long','lat')
@@ -69,6 +73,15 @@ class Window(ThemedTk):
         selected_data = L7datasource.get_selected_data(selected)
         for record in selected_data:
             self.tree.insert('','end',values=record)
+
+    def county_selected(self,event):
+        selected = self.selected_county.get()
+        counties = L7datasource.get_sitename(county=selected)
+        if self.listbox:
+            self.listbox.destroy()
+        var = tk.Variable(value=counties)
+        self.listbox = tk.Listbox(self.selectedFrame, listvariable=var, height=6, selectmode=tk.EXTENDED)
+        self.listbox.pack()
 
             
 
