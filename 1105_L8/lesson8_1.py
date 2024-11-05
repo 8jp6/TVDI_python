@@ -6,6 +6,7 @@ from ttkthemes import ThemedTk
 from tkinter.messagebox import showinfo
 import view
 
+
 class Window(ThemedTk):
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,9 +26,12 @@ class Window(ThemedTk):
         #==============end topFrame===============
 
         #==============bottomFrame===============
-        bottomFrame = ttk.Frame(self)
-            #==============SelectedFrame===============        
+        bottomFrame = ttk.Frame(self,padding=[10,10,10,10])
+        #==============SelectedFrame===============        
         self.selectedFrame= ttk.Frame(self,padding=[10,10,10,10])
+        #更新按鈕
+        icon_button = view.ImageButton(self.selectedFrame, command = lambda:datasource.download_data())
+        icon_button.pack()
         #combobox選擇城市      
         counties = datasource.get_county()
         #self.selected_site = tk.StringVar()
@@ -37,25 +41,24 @@ class Window(ThemedTk):
         sitenames_cb.bind('<<ComboboxSelected>>', self.county_selected)
         sitenames_cb.pack(anchor='n',pady=10)
 
-        self.listbox = None 
-        
-        
+        self.sitenameFrame = None 
 
-
-
-        self.selectedFrame.pack(side='left',expand=True,fill='y',padx=(20,0))
-            #==============End SelectedFrame=============== 
+        self.selectedFrame.pack(side='left',padx=(20,0))
+        #==============End SelectedFrame=============== 
     
-        
+        #==============rightFrame======================
 
+        rightFrame = ttk.LabelFrame(bottomFrame,text="站點資訊",padding=[10,10,10,10])
+        #建立ㄘㄨ一ㄅㄧㄨˋ
         # define columns
-        columns = ('date', 'county', 'aqi', 'pm25','status','lat','lon')
+        columns = ('date', 'county', 'sitename', 'aqi', 'pm25','status','lat','lon')
 
-        self.tree = ttk.Treeview(bottomFrame, columns=columns, show='headings')
+        self.tree = ttk.Treeview(rightFrame, columns=columns, show='headings')
 
         # define headings
         self.tree.heading('date', text='日期')
         self.tree.heading('county', text='縣市')
+        self.tree.heading('sitename', text='站點')
         self.tree.heading('aqi', text='AQI')
         self.tree.heading('pm25', text='PM25')
         self.tree.heading('status',text='狀態')
@@ -64,53 +67,48 @@ class Window(ThemedTk):
 
         self.tree.column('date', width=150,anchor="center")
         self.tree.column('county', width=80,anchor="center")
+        self.tree.column('sitename', width=80,anchor="center")
         self.tree.column('aqi', width=50,anchor="center")
         self.tree.column('pm25', width=50,anchor="center")
         self.tree.column('status', width=50,anchor="center")
         self.tree.column('lat', width=100,anchor="center")
         self.tree.column('lon', width=100,anchor="center")
-        
-        # generate sample data
-        #contacts = []
-        #for n in range(1, 100):
-        #    contacts.append((f'first {n}', f'last {n}', f'email{n}@example.com'))
-
-        # add data to the treeview
-        #for contact in contacts:
-        #    tree.insert('', tk.END, values=contact)
-        
+    
         self.tree.pack(side='right')
-        bottomFrame.pack(expand=True,fill='x',padx=20,pady=(0,20),ipadx=10,ipady=10)
 
-            #==============end bottomFrame===============
+        rightFrame.pack(side='right')
+
+        #==============EndrightFrame===============
+
+        bottomFrame.pack()
+
+        #==============end bottomFrame==============
         
     def county_selected(self,event):
         selected = self.selected_county.get()
         sitenames = datasource.get_sitename(county=selected)
         #listbox選擇站點
-        if self.listbox:
-            self.listbox.destroy()
+        if self.sitenameFrame:
             self.sitenameFrame.destroy()
 
-        var = tk.Variable(value=sitenames)
-        self.listbox = tk.Listbox(
-                    self.selectedFrame,
-                    listvariable=var,
-                    height=6,
-                    selectmode=tk.EXTENDED
-                )
-        self.listbox.pack()
-        self.sitenameFrame = view.SitenameFrame(master=self.selectedFrame,sitenames=sitenames)
+        self.sitenameFrame = view.SitenameFrame(master=self.selectedFrame,sitenames=sitenames,radio_controller=self.radio_button_click)
         self.sitenameFrame.pack()
 
 
-    def sitename_selected(self,event):
+    def radio_button_click(self,selected_sitename:str):
+        '''
+        - 此method是傳遞給SitenameFrame實體
+        - 當sitenameFrame內的radiobutton被選取時,會連動執行此method
+        Parameter:
+            selected_sitename:str -> 這是被選取的站點名稱
+        '''
+        #清空treeview 填進新的資料
         for children in self.tree.get_children():
-            self.tree.delete(children)
-        selected = self.selected_site.get()        
-        selected_data = datasource.get_selected_data(selected)
+            self.tree.delete(children)      
+        selected_data = datasource.get_selected_data(selected_sitename)
         for record in selected_data:
             self.tree.insert("", "end", values=record)
+
 
     
         
