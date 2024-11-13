@@ -114,8 +114,7 @@ class Window(ThemedTk):
     def item_selected(self,event):
         for select_item in self.tree.selection():
             record = self.tree.item(select_item)
-            print(record['values'])
-            dialog = view.MyCustomDialog(self,title='我是標題')
+            dialog = view.MyCustomDialog(parent = self, title = f'{record["values"][1]} - {record["values"][2]}', record = record['values'])
 
 
     
