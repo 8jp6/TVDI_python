@@ -2,3 +2,6 @@ requests
 ttkthemes
 pillow
 tkintermapview
+pandas
+pyproj
+geopy
