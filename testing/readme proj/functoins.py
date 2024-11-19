@@ -34,3 +34,22 @@ def reverseaddress(location):
     all_address.append(list_address)
     print(f'總清單:{all_address}')
 
+
+
+
+def latlonturn(mode,x,y):
+    """
+    參數 mode 必須是 'reverse' 或 'observe'。
+    """
+    valid_modes = ["reverse", "observe"]
+    if mode not in valid_modes:
+        raise ValueError(f"無效的模式：{mode}。可接受的模式有：{', '.join(valid_modes)}")
+
+    if mode == "reverse":
+        print("執行反轉操作")
+        latitude, longitude = xytransform(x,y)
+        location = get_address_from_coordinates(latitude, longitude)
+        address = reverseaddress(location)
+        return address
+    elif mode == "observe":
+        print("執行順序操作 沒有這個部分")
