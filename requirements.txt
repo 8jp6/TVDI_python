@@ -5,4 +5,5 @@ tkintermapview
 pandas
 pyproj
 geopy
+matplotlib
 python-dotenv
