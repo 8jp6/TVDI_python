@@ -53,3 +53,55 @@ def latlonturn(mode,list:list = None,x = None,y = None) -> str:
         location = get_address_from_coordinates(latitude, longitude)
         address = reverseaddress(location,list)
         return address
+
+
+def get_district()->list[str]:
+    '''
+    docString
+    parameter:
+    return:
+        傳出所有的行政區名稱
+    '''
+    conn = sqlite3.connect("TPEroad.db")
+    with conn:
+        # Create a cursor object to execute SQL commands
+        cursor = conn.cursor()
+        # SQL query to select unique sitenames from records table
+        sql = '''
+        SELECT DISTINCT 行政區
+        FROM records
+        '''
+        # Execute the SQL query
+        cursor.execute(sql)
+        # Get all results and extract first item from each row into a list
+        district = [items[0] for items in cursor.fetchall()]
+    
+    # Return the list of unique sitenames
+    return district
+
+def get_rodename(district:str)->list[str]:
+    '''
+    docString
+    parameter:
+        county:行政區名稱
+
+    return:
+        傳出行政區內所有登記的路段
+    '''
+    conn = sqlite3.connect("TPEroad.db")
+    with conn:
+        # Create a cursor object to execute SQL commands
+        cursor = conn.cursor()
+        # SQL query to select unique sitenames from records table
+        sql = '''
+        SELECT DISTINCT 新地址
+        FROM records
+        WHERE district = ?       
+         '''
+        # Execute the SQL query
+        cursor.execute(sql,(district,))       
+        full_address = [items[0] for items in cursor.fetchall()]
+        
+    
+    # Return the list of unique sitenames
+    return full_address
