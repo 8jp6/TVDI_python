@@ -7,4 +7,3 @@ pyproj
 geopy
 matplotlib
 python-dotenv
-gdal
