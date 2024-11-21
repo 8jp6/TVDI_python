@@ -35,7 +35,6 @@ class Window(ThemedTk):
         icon_button.pack()
         #combobox選擇城市      
         counties = datasource.get_county()
-        #self.selected_site = tk.StringVar()
         self.selected_county = tk.StringVar()
         sitenames_cb = ttk.Combobox(self.selectedFrame, textvariable=self.selected_county,values=counties,state='readonly')
         self.selected_county.set('請選擇城市')
