@@ -7,3 +7,4 @@ pyproj
 geopy
 matplotlib
 python-dotenv
+folium
