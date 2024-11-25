@@ -123,7 +123,7 @@ def get_selected_data(district:str)->list[list]:
     with conn:
         cursor = conn.cursor()        
         sql = '''
-        SELECT 日期,
+        SELECT 申請日期,
         新地址,
 	    PRINTF("%.4f", ROUND(lat, 4)) AS Lat ,
         PRINTF("%.4f", ROUND(lon, 4)) as Lon 

@@ -2,7 +2,6 @@ from tkinter import ttk
 import tkinter as tk
 from ttkthemes import ThemedTk
 from tkinter.messagebox import showinfo
-
 import functoins 
 import view
 from pandas import DataFrame
@@ -47,10 +46,10 @@ class Window(ThemedTk):
         columns = ('date', 'address', 'lat', 'lon')
 
         self.tree = ttk.Treeview(rightFrame, columns=columns, show='headings')
-        # self.tree.bind('<<TreeviewSelect>>', self.item_selected)
+        self.tree.bind('<<TreeviewSelect>>', self.item_selected)
         
         # define headings
-        self.tree.heading('date', text='日期')
+        self.tree.heading('date', text='申請日期')
         self.tree.heading('address', text='地址')
         self.tree.heading('lat', text='緯度')
         self.tree.heading('lon', text='經度')
@@ -93,10 +92,11 @@ class Window(ThemedTk):
             # self.canvas.draw()
             # self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand = True, pady = (20,10))
 
-    # def item_selected(self,event):
-    #     for select_item in self.tree.selection():
-    #         record = self.tree.item(select_item)
-    #         dialog = view.MyCustomDialog(parent = self, title = f'{record["values"][1]} - {record["values"][2]}', record = record['values'])
+    def item_selected(self,event):
+        for select_item in self.tree.selection():
+            record = self.tree.item(select_item)
+            print(record)
+            dialog = view.MyCustomDialog(parent = self,record=record, title = f'{record["values"][0]} - {record["values"][1]}') 
 
 
 
