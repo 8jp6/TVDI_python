@@ -8,3 +8,4 @@ geopy
 matplotlib
 python-dotenv
 folium
+pydantic
