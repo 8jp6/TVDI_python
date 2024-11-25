@@ -25,6 +25,7 @@ class Window(ThemedTk):
         bottomFrame = ttk.Frame(self,padding=[10,10,10,10])
         #==============combobxfrmae===============
         self.selectedFrame= ttk.Frame(self,padding=[10,10,10,10])
+       
         #combobox選擇城市      
         counties = functoins.get_district()
         self.selected_district = tk.StringVar()
@@ -32,7 +33,9 @@ class Window(ThemedTk):
         self.selected_district.set('請選擇城市')
         sitenames_cb.bind('<<ComboboxSelected>>', self.cb_click)
         sitenames_cb.pack(anchor='n',pady=10)
-
+         #更新按鈕
+        icon_button = view.ImageButton(self.selectedFrame, command = lambda:functoins.download_data())
+        icon_button.pack()
         self.sitenameFrame = None 
 
         self.selectedFrame.pack(side='left',padx=(20,0))
@@ -84,15 +87,6 @@ class Window(ThemedTk):
             for record in selected_data:
                 self.tree.insert("", "end", values=record)
 
-            #currentedit
-            # dataframe:DataFrame = datasource.get_plot_data(sitename=selected_sitename)
-            # axes = dataframe.plot()
-            # figure = axes.get_figure()
-            # if self.canvas:
-            #     self.canvas.get_tk_widget().destroy()
-            # self.canvas = FigureCanvasTkAgg(figure, master = self.plotFrame)
-            # self.canvas.draw()
-            # self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand = True, pady = (20,10))
 
     def item_selected(self,event):
         for select_item in self.tree.selection():
@@ -104,6 +98,7 @@ class Window(ThemedTk):
 
 
 def main():
+    functoins.old_to_new_address()
     window = Window(theme="arc")
     window.mainloop()
 

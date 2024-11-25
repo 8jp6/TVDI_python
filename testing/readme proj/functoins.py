@@ -1,6 +1,11 @@
 from pyproj import Transformer
 from geopy.geocoders import Nominatim
 import sqlite3
+import requests
+from requests import Response
+from pyproj import Proj, transform
+import functoins
+import time
 
 
 def xytransform(twx1:float,twy1:float):
@@ -39,8 +44,6 @@ def reverseaddress(location,alllist:list = None):
     return list_address
 
 
-
-
 def latlonturn(mode,list:list = None,x = None,y = None) -> str:
     """
     參數 mode 必須是 'reverse' 或 'observe'。
@@ -59,6 +62,170 @@ def latlonturn(mode,list:list = None,x = None,y = None) -> str:
     elif mode == "observe":
         print("執行順序操作 沒有這個部分")
 
+#######################################################################################
+
+def download_data_coordinates():
+    '''得到coordinates裡面的資料 並且把資料插入到tperoad.db裡面的coordinates table'''
+    try:
+        '''得到RESPONSE'''
+        url = "https://tpnco.blob.core.windows.net/blobfs/Rally/TodayUrgentCase.json"
+        response:Response = requests.get(url)
+        response_json = response.json()
+        data = response.json()
+        print(response.text)
+
+        '''得到資料裡面的coordinates
+        [['10967113574169', 308552.16, 2773353.307],
+        ['10967113574169', 308546.447, 2773362.631]] 
+        第0個欄位是座標屬於的資料'''
+        result = []
+        # 遍歷 features 中的每個 JSON 物件
+        for feature in data["features"]:
+            # 提取該 feature 的 geometry["0"] 中的所有座標
+            coordinates_list = feature["geometry"]["coordinates"][0]
+            # 提取該 feature 的 BILL_CODE
+            bill_code = feature["properties"]["BILL_CODE"]
+            # 遍歷每個座標，將 BILL_CODE 和座標結合，並加入結果列表
+            for coordinates in coordinates_list:
+                result.append([bill_code] + coordinates)
+            # 顯示結果
+        print(result)
+
+        '''把COORDINATES裡面的座標換成經緯度'''
+        coordinates_dict = {}
+        for item in result:
+            # 取出每筆資料的編號（例如 '10967113574169'）
+            identifier = item[0]
+            # 取得對應的坐標資料 (x, y)
+            coordinates = [item[1], item[2]]
+            
+            # 如果這個編號已經在字典裡，則將新的坐標資料加到現有的列表中
+            if identifier not in coordinates_dict:
+                coordinates_dict[identifier] = []  # 如果該編號還沒有資料，創建一個空列表
+            coordinates_dict[identifier].append(coordinates)
+
+        print(coordinates_dict)
+
+        ###############################################################################
+
+        # 定義 TWD97 和 WGS84 座標系統
+        twd97 = Proj(init='epsg:3826')  # TWD97
+        wgs84 = Proj(init='epsg:4326')  # WGS84
+
+        # 假設有多筆 TWD97 坐標 [[x1, y1], [x2, y2], ...]
+        conn = sqlite3.connect('TPEroad.db')
+        with conn:
+            cursor = conn.cursor()
+            # 轉換所有 TWD97 坐標為 WGS84
+            coordinates_wgs84 = []
+            for key, value in coordinates_dict.items():
+                keyy = key
+                for x, y in value:
+                    # 轉換為 WGS84 坐標
+                    longitude, latitude = transform(twd97, wgs84, x, y)
+                    coordinates_wgs84.append([longitude, latitude])
+                    sql = '''
+                    INSERT INTO coordinates_test (BILL_CODE, lat, lon)
+                    SELECT ?, ROUND(?, 6), ROUND(?, 6)
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM coordinates_test WHERE lat = ROUND(?, 6)
+                    );
+                    '''
+                    cursor.execute(sql, (keyy, latitude, longitude, latitude))
+
+
+    except Exception as e:
+        print(e)
+
+##########################################################################################
+    
+def download_data():
+    '''
+    下載資料 需要做驗證只寫入不在資料庫裏面的那筆
+    '''
+    conn = sqlite3.connect("./TPEroad.db")
+    url = 'https://tpnco.blob.core.windows.net/blobfs/Rally/TodayUrgentCase.json'
+    try:
+        response = requests.get(url)
+        data = response.json()
+        response.raise_for_status()
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+            CREATE TABLE IF NOT EXISTS records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Bill_code TEXT,
+                RCVdate TEXT,
+                Start_date TEXT,
+                End_date TEXT,
+                Address1 TEXT,
+                X1 TEXT,
+                Y1 TEXT,
+                新地址 TEXT,
+                行政區 TEXT,
+                Lat TEXT,
+                Lon TEXT,
+                申請日期 TEXT,
+                開始日期 TEXT,
+                結束日期 TEXT,
+                UNIQUE(Address1,RCVdate)
+            )
+            ''')
+            cursor.execute('''
+            CREATE TABLE IF NOT EXISTS coordinates (
+                Bill_code TEXT,
+                Lat TEXT,
+                Lon TEXT,
+                UNIQUE(Bill_code)
+            )
+            ''')
+            print("Table 'records' created or already exists.")
+
+    except Exception as e:
+        print(e)
+
+    else:
+        with conn:
+            cursor = conn.cursor()
+            for i in data['features']:
+                for k in i['properties']:
+                    Bill_code:str = i['properties']["BILL_CODE"]
+                    RCVdate = i['properties']["URGENT_RCV_DATE"]
+                    Start_date = i['properties']["URGENT_START_DATE"]
+                    End_date = i['properties']["URGENT_END_DATE"]
+                    Address1 = i['properties']["URGENT_ADDRESS1"]
+                    X1 = i['properties']["X1"]
+                    Y1 = i['properties']["Y1"]
+
+                    
+                    cursor = conn.cursor()
+                    sql = '''INSERT OR IGNORE INTO records(Bill_code, RCVdate, Start_date, End_date, Address1, X1, Y1)
+                                values (?, ?, ?, ?, ?, ?, ?);
+                            '''
+                    cursor.execute(sql,(Bill_code, RCVdate, Start_date, End_date, Address1, X1, Y1))
+
+    return print('資料下載，匯入完成')
+
+##############################################################################################
+def old_to_new_address():
+    conn = sqlite3.connect('TPEroad.db')
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute('''SELECT Address1,x1,y1 FROM records''')
+        # 把地址跟x1y1座標存進一個字典裡面
+        address = []
+        for i in cursor.fetchall():
+            di = {}
+            di["地址"] = i[0]
+            di["x1"] = i[1]
+            di["y1"] = i[2]
+            address.append(di)
+        print(address)
+
+        alladdress = []
+
+
+#############################################################################################
 
 def get_district()->list[str]:
     '''
