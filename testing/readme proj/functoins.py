@@ -124,6 +124,8 @@ def get_selected_data(district:str)->list[list]:
         cursor = conn.cursor()        
         sql = '''
         SELECT 申請日期,
+        開始日期,
+        結束日期,
         新地址,
 	    PRINTF("%.4f", ROUND(lat, 4)) AS Lat ,
         PRINTF("%.4f", ROUND(lon, 4)) as Lon 
@@ -134,3 +136,4 @@ def get_selected_data(district:str)->list[list]:
         cursor.execute(sql,(district,))
         address_list = [list(item) for item in cursor.fetchall()]
         return address_list
+    

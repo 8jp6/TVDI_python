@@ -4,8 +4,6 @@ from ttkthemes import ThemedTk
 from tkinter.messagebox import showinfo
 import functoins 
 import view
-from pandas import DataFrame
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Window(ThemedTk):
     def __init__(self,*args, **kwargs):
@@ -43,18 +41,22 @@ class Window(ThemedTk):
         rightFrame = ttk.LabelFrame(bottomFrame,text="道路資訊",padding=[10,10,10,10])
         #建立ㄘㄨ一ㄅㄧㄨˋ
         # define columns
-        columns = ('date', 'address', 'lat', 'lon')
+        columns = ('date','start_date','end_date', 'address', 'lat', 'lon')
 
         self.tree = ttk.Treeview(rightFrame, columns=columns, show='headings')
         self.tree.bind('<<TreeviewSelect>>', self.item_selected)
         
         # define headings
         self.tree.heading('date', text='申請日期')
+        self.tree.heading('start_date', text='開始日期')
+        self.tree.heading('end_date', text='結束日期')
         self.tree.heading('address', text='地址')
         self.tree.heading('lat', text='緯度')
         self.tree.heading('lon', text='經度')
 
         self.tree.column('date', width=100,anchor="center")
+        self.tree.column('start_date', width=100,anchor="center")
+        self.tree.column('end_date', width=100,anchor="center")
         self.tree.column('address', width=500,anchor="w")
         self.tree.column('lat', width=100,anchor="center")
         self.tree.column('lon', width=100,anchor="center")
@@ -96,22 +98,7 @@ class Window(ThemedTk):
         for select_item in self.tree.selection():
             record = self.tree.item(select_item)
             print(record)
-            dialog = view.MyCustomDialog(parent = self,record=record, title = f'{record["values"][0]} - {record["values"][1]}') 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            dialog = view.MyCustomDialog(parent = self,record=record, title = f'{record["values"][1]} - {record["values"][3]}') 
 
 
 

@@ -8,8 +8,8 @@ class MyCustomDialog(Dialog):
     def __init__(self, parent, record:list, title = None):
        print('HI mycustomdialog')
        print(f'傳過來的record:{record}')
-       self.lat = float(record["values"][2])
-       self.lon = float(record["values"][3])
+       self.lat = float(record["values"][4])
+       self.lon = float(record["values"][5])
        super().__init__(parent = parent, title = title) 
 
     def body(self,master):
