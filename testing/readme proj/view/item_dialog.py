@@ -6,21 +6,21 @@ from PIL import Image,ImageTk
 
 class MyCustomDialog(Dialog):
     def __init__(self, parent, record:list, title = None):
-       print('HI mycustomdialog')
        print(f'傳過來的record:{record}')
        self.lat = float(record["values"][4])
        self.lon = float(record["values"][5])
+       self.data = data
        super().__init__(parent = parent, title = title) 
 
     def body(self,master):
 
         map_frame = ttk.Frame(master)
-        map_widget = tkmap.TkinterMapView(map_frame,
-                                         width=600,
-                                         height=600,
-                                         corner_radius=30
-                                         )
+        map_widget = tkmap.TkinterMapView(map_frame, width=600, height=400, corner_radius=0)
         map_widget.set_position(self.lat,self.lon,marker=True)
+        # # 畫出範圍的矩形
+        map_widget.set_polygon(self.data)
+
+
         map_widget.pack()
         map_frame.pack(padx=10,pady=10)
 

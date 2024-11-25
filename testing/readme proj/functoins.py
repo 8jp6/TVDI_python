@@ -175,8 +175,7 @@ def download_data():
             CREATE TABLE IF NOT EXISTS coordinates (
                 Bill_code TEXT,
                 Lat TEXT,
-                Lon TEXT,
-                UNIQUE(Bill_code)
+                Lon TEXT
             )
             ''')
             print("Table 'records' created or already exists.")
@@ -224,7 +223,22 @@ def old_to_new_address():
 
         alladdress = []
 
+        for i in address:
+            ad = i['地址']
+            fuad = functoins.latlonturn("reverse",alladdress,i['x1'],i['y1'])
+            fullstreet = ''.join(fuad)
+            lat,lon = functoins.xytransform(i['x1'],i['y1'])
+            for i in fuad:
+                if "區" in i :dist = i
+            add_content_sql = '''
+            UPDATE RECORDS
+            SET 新地址 = ?, 行政區 = ?, Lat = ?, Lon = ?
+            WHERE address1 = ?;
+            '''
 
+            cursor.execute(add_content_sql,(fullstreet, dist, lat, lon, ad))
+            time.sleep(6)
+            conn.commit()
 #############################################################################################
 
 def get_district()->list[str]:

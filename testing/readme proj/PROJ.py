@@ -33,9 +33,6 @@ class Window(ThemedTk):
         self.selected_district.set('請選擇城市')
         sitenames_cb.bind('<<ComboboxSelected>>', self.cb_click)
         sitenames_cb.pack(anchor='n',pady=10)
-         #更新按鈕
-        icon_button = view.ImageButton(self.selectedFrame, command = lambda:functoins.download_data())
-        icon_button.pack()
         self.sitenameFrame = None 
 
         self.selectedFrame.pack(side='left',padx=(20,0))
@@ -60,7 +57,7 @@ class Window(ThemedTk):
         self.tree.column('date', width=100,anchor="center")
         self.tree.column('start_date', width=100,anchor="center")
         self.tree.column('end_date', width=100,anchor="center")
-        self.tree.column('address', width=500,anchor="w")
+        self.tree.column('address', width=400,anchor="w")
         self.tree.column('lat', width=100,anchor="center")
         self.tree.column('lon', width=100,anchor="center")
 
@@ -98,7 +95,6 @@ class Window(ThemedTk):
 
 
 def main():
-    functoins.old_to_new_address()
     window = Window(theme="arc")
     window.mainloop()
 
