@@ -3,13 +3,18 @@ from tkinter import ttk
 from tkinter.simpledialog import Dialog
 import tkintermapview as tkmap
 from PIL import Image,ImageTk
+import sqlite3
+import os
 
 class MyCustomDialog(Dialog):
     def __init__(self, parent, record:list, title = None):
        print(f'傳過來的record:{record}')
        self.lat = float(record["values"][4])
        self.lon = float(record["values"][5])
-       self.data = data
+       self.ad = record['values'][3]
+       print(self.ad)
+       self.get_data()
+       self.data = self.address_list
        super().__init__(parent = parent, title = title) 
 
     def body(self,master):
@@ -44,3 +49,17 @@ class MyCustomDialog(Dialog):
     def cancel(self, event = None):
         print('Cancel被按了')
         super().cancel()
+
+    def get_data(self):
+        conn = sqlite3.connect(r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\readme_proj\TPEroad.db')
+        with conn:
+            cursor = conn.cursor()        
+        sql = '''
+        SELECT c.Lat, c.Lon
+        FROM coordinates c
+        JOIN records r ON c.Bill_code = r.Bill_code
+        WHERE r.新地址 = ?;
+        '''
+        cursor.execute(sql,(self.ad,))
+        self.address_list = [[float(coord) for coord in item] for item in cursor.fetchall()]
+        print(self.address_list)

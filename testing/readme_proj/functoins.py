@@ -65,14 +65,14 @@ def latlonturn(mode,list:list = None,x = None,y = None) -> str:
 #######################################################################################
 
 def download_data_coordinates():
-    '''得到coordinates裡面的資料 並且把資料插入到tperoad.db裡面的coordinates table'''
+    '''得到coordinates裡面的資料 並且把資料插入到tperoad.db裡面的coordinates table 大概3分鐘'''
+    print('按鈕被按了')
     try:
         '''得到RESPONSE'''
         url = "https://tpnco.blob.core.windows.net/blobfs/Rally/TodayUrgentCase.json"
         response:Response = requests.get(url)
-        response_json = response.json()
         data = response.json()
-        print(response.text)
+        # print(response.text)
 
         '''得到資料裡面的coordinates
         [['10967113574169', 308552.16, 2773353.307],
@@ -89,7 +89,7 @@ def download_data_coordinates():
             for coordinates in coordinates_list:
                 result.append([bill_code] + coordinates)
             # 顯示結果
-        print(result)
+        # print(result)
 
         '''把COORDINATES裡面的座標換成經緯度'''
         coordinates_dict = {}
@@ -104,7 +104,7 @@ def download_data_coordinates():
                 coordinates_dict[identifier] = []  # 如果該編號還沒有資料，創建一個空列表
             coordinates_dict[identifier].append(coordinates)
 
-        print(coordinates_dict)
+        # print(coordinates_dict)
 
         ###############################################################################
 
@@ -113,7 +113,8 @@ def download_data_coordinates():
         wgs84 = Proj(init='epsg:4326')  # WGS84
 
         # 假設有多筆 TWD97 坐標 [[x1, y1], [x2, y2], ...]
-        conn = sqlite3.connect('TPEroad.db')
+        db_path = r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\readme_proj\TPEroad.db'
+        conn = sqlite3.connect(db_path)
         with conn:
             cursor = conn.cursor()
             # 轉換所有 TWD97 坐標為 WGS84
@@ -125,13 +126,14 @@ def download_data_coordinates():
                     longitude, latitude = transform(twd97, wgs84, x, y)
                     coordinates_wgs84.append([longitude, latitude])
                     sql = '''
-                    INSERT INTO coordinates_test (BILL_CODE, lat, lon)
+                    INSERT INTO coordinates (BILL_CODE, lat, lon)
                     SELECT ?, ROUND(?, 6), ROUND(?, 6)
                     WHERE NOT EXISTS (
-                        SELECT 1 FROM coordinates_test WHERE lat = ROUND(?, 6)
+                        SELECT 1 FROM coordinates WHERE lat = ROUND(?, 6)
                     );
                     '''
                     cursor.execute(sql, (keyy, latitude, longitude, latitude))
+            
 
 
     except Exception as e:
@@ -143,7 +145,9 @@ def download_data():
     '''
     下載資料 需要做驗證只寫入不在資料庫裏面的那筆
     '''
-    conn = sqlite3.connect("./TPEroad.db")
+    db_path = r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\readme_proj\TPEroad.db'
+    conn = sqlite3.connect(db_path)
+    
     url = 'https://tpnco.blob.core.windows.net/blobfs/Rally/TodayUrgentCase.json'
     try:
         response = requests.get(url)
@@ -165,9 +169,9 @@ def download_data():
                 行政區 TEXT,
                 Lat TEXT,
                 Lon TEXT,
-                申請日期 TEXT,
-                開始日期 TEXT,
-                結束日期 TEXT,
+                申請日期 TEXT CHECK (申請日期 LIKE '____-__-__'),
+                開始日期 TEXT CHECK (開始日期 LIKE '____-__-__'),
+                結束日期 TEXT CHECK (結束日期 LIKE '____-__-__'),
                 UNIQUE(Address1,RCVdate)
             )
             ''')
@@ -195,19 +199,22 @@ def download_data():
                     Address1 = i['properties']["URGENT_ADDRESS1"]
                     X1 = i['properties']["X1"]
                     Y1 = i['properties']["Y1"]
+                    formatted_RCVdate = f"{RCVdate[:4]}-{RCVdate[4:6]}-{RCVdate[6:8]}" if RCVdate else None
+                    formatted_Start_date = f"{Start_date[:4]}-{Start_date[4:6]}-{Start_date[6:8]}" if Start_date else None
+                    formatted_End_date = f"{End_date[:4]}-{End_date[4:6]}-{End_date[6:8]}" if End_date else None
 
                     
                     cursor = conn.cursor()
-                    sql = '''INSERT OR IGNORE INTO records(Bill_code, RCVdate, Start_date, End_date, Address1, X1, Y1)
-                                values (?, ?, ?, ?, ?, ?, ?);
+                    sql = '''INSERT OR IGNORE INTO records(Bill_code, RCVdate, Start_date, End_date, Address1, X1, Y1,申請日期, 開始日期, 結束日期)
+                                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                             '''
-                    cursor.execute(sql,(Bill_code, RCVdate, Start_date, End_date, Address1, X1, Y1))
+                    cursor.execute(sql,(Bill_code, RCVdate, Start_date, End_date, Address1, X1, Y1,formatted_RCVdate, formatted_Start_date, formatted_End_date))
 
     return print('資料下載，匯入完成')
 
 ##############################################################################################
 def old_to_new_address():
-    conn = sqlite3.connect('TPEroad.db')
+    conn = sqlite3.connect(r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\readme_proj\TPEroad.db')
     with conn:
         cursor = conn.cursor()
         cursor.execute('''SELECT Address1,x1,y1 FROM records''')
@@ -237,8 +244,9 @@ def old_to_new_address():
             '''
 
             cursor.execute(add_content_sql,(fullstreet, dist, lat, lon, ad))
-            time.sleep(6)
+            time.sleep(2)
             conn.commit()
+        cursor.execute('''UPDATE records SET 行政區 = '大安區' WHERE 行政區 = '東區地下街';''')
 #############################################################################################
 
 def get_district()->list[str]:

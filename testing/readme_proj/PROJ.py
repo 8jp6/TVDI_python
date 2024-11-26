@@ -25,7 +25,9 @@ class Window(ThemedTk):
         bottomFrame = ttk.Frame(self,padding=[10,10,10,10])
         #==============combobxfrmae===============
         self.selectedFrame= ttk.Frame(self,padding=[10,10,10,10])
-       
+        #更新按鈕
+        icon_button = view.ImageButton(self.selectedFrame, command = functoins.download_data_coordinates)
+        icon_button.pack()
         #combobox選擇城市      
         counties = functoins.get_district()
         self.selected_district = tk.StringVar()
