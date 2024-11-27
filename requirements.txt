@@ -9,3 +9,7 @@ matplotlib
 python-dotenv
 folium
 pydantic
+librosa
+ipywidgets
+numpy
+pydub
