@@ -23,7 +23,7 @@ class MyCustomDialog(Dialog):
         map_widget = tkmap.TkinterMapView(map_frame, width=600, height=400, corner_radius=0)
         map_widget.set_position(self.lat,self.lon,marker=True)
         # # 畫出範圍的矩形
-        map_widget.set_polygon(self.data)
+        map_widget.set_polygon(self.ordered_coordinates)
 
 
         map_widget.pack()
@@ -63,3 +63,18 @@ class MyCustomDialog(Dialog):
         cursor.execute(sql,(self.ad,))
         self.address_list = [[float(coord) for coord in item] for item in cursor.fetchall()]
         print(self.address_list)
+        # 根據經度和緯度來排序座標
+        sorted_coordinates = sorted(self.address_list, key=lambda x: (x[0], x[1]))
+
+        # 確定四個角點
+        x_values = [coord[0] for coord in sorted_coordinates]
+        y_values = [coord[1] for coord in sorted_coordinates]
+
+        # 確定長方形的四個角點
+        left_bottom = (min(x_values), min(y_values))
+        right_bottom = (max(x_values), min(y_values))
+        left_top = (min(x_values), max(y_values))
+        right_top = (max(x_values), max(y_values))
+
+        # 用正確的順序繪製長方形的四個角
+        self.ordered_coordinates = [left_bottom, left_top, right_top, right_bottom, left_bottom]
