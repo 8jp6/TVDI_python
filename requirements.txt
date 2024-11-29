@@ -13,3 +13,4 @@ librosa
 ipywidgets
 numpy
 pydub
+pyinstaller

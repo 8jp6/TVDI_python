@@ -1,27 +1,17 @@
-#env Forml(L)
-import numpy as np
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+import requests
+import csv
+import os
 
-# 載入數據集（以鸢尾花數據集為例）
-iris = datasets.load_iris()
-X = iris.data  # 特徵
-y = iris.target  # 標籤
+# 取得目前執行檔案的路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(current_dir, '股票.csv')
 
-# 切分數據集為訓練集和測試集
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# 創建 KNN 分類器
-knn = KNeighborsClassifier(n_neighbors=3)
-
-# 在訓練集上訓練模型
-knn.fit(X_train, y_train)
-
-# 在測試集上進行預測
-y_pred = knn.predict(X_test)
-
-# 計算準確率
-accuracy = accuracy_score(y_test, y_pred)
-print(f'準確率: {accuracy:.2f}')
+url = 'https://openapi.twse.com.tw/v1/opendata/t187ap05_L'
+data = requests.get(url)
+dj = data.json()
+with open(file_path,'w',encoding='utf-8',newline='') as f:
+    fieldnames = ['公司代號','公司名稱','出表日期','營業收入-上月比較增減(%)','營業收入-上月營收','營業收入-去年同月增減(%)','營業收入-去年當月營收','營業收入-當月營收','產業別','累計營業收入-前期比較增減(%)','累計營業收入-去年累計營收','累計營業收入-當月累計營收','資料年月','備註']
+    dict_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    dict_writer.writeheader()
+    for i in dj:
+        dict_writer.writerow(i)
