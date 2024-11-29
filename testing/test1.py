@@ -1,9 +1,17 @@
 import requests
 import csv
 import os
+import sys
 
-# 取得目前執行檔案的路徑
-current_dir = os.path.dirname(os.path.abspath(__file__))
+def get_exe_dir():
+    """取得執行檔所在的目錄"""
+    if getattr(sys, 'frozen', False):  # 是否被 PyInstaller 打包
+        return os.path.dirname(sys.executable)  # 取得 exe 所在目錄
+    else:
+        return os.path.dirname(os.path.abspath(__file__))  # 取得 .py 檔所在目錄
+
+# 設定檔案路徑
+current_dir = get_exe_dir()
 file_path = os.path.join(current_dir, '股票.csv')
 
 url = 'https://openapi.twse.com.tw/v1/opendata/t187ap05_L'
