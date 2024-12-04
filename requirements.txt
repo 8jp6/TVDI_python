@@ -14,3 +14,4 @@ ipywidgets
 numpy
 pydub
 pyinstaller
+selenium 
