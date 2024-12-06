@@ -14,3 +14,12 @@ ipywidgets
 numpy
 pydub
 pyinstaller
+<<<<<<< HEAD
+seaborn
+=======
+selenium
+Flask-WTF
+gunicorn
+psycopg2-binary
+pygame
+>>>>>>> 904e1aef79094b2877e7d39e77c3043b5776d487
