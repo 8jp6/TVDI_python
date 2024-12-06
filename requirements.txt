@@ -16,3 +16,6 @@ pydub
 pyinstaller
 selenium
 Flask-WTF
+gunicorn
+psycopg2-binary
+pygame
