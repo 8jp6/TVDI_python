@@ -21,4 +21,4 @@ gunicorn
 psycopg2-binary
 pygame
 dash-mantine-components
-
+openpyxl
