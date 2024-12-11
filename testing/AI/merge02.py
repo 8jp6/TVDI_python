@@ -43,8 +43,9 @@ for column in sheet3_data_cleaned.columns:
     y_pr = sheet3_data_cleaned[column].values
     model_pr = LinearRegression()
     model_pr.fit(x_pr, y_pr)
+    #這前面4行都在訓練模型
     future_x_pr = np.arange(len(sheet3_data_cleaned), len(sheet3_data_cleaned) + future_months).reshape(-1, 1)
-    predictions_pr[column] = model_pr.predict(future_x_pr)
+    predictions_pr[column] = model_pr.predict(future_x_pr) #生成預測結果
     x_poly = poly.fit_transform(x_pr)
     y_pr = sheet3_data_cleaned[column].values
     model_poly = LinearRegression()
