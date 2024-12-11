@@ -36,8 +36,8 @@ future_months = 6
 # Using Polynomial Regression (degree 2)
 predictions_poly = {}
 poly = PolynomialFeatures(degree=2)
-
 predictions_pr = {}
+
 for column in sheet3_data_cleaned.columns:
     x_pr = np.arange(len(sheet3_data_cleaned)).reshape(-1, 1)
     y_pr = sheet3_data_cleaned[column].values
