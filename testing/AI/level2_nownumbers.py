@@ -64,9 +64,9 @@ merged_data['預測結果'] = rf_model.predict(X)
 merged_data.loc[merged_data['站點差距'] == 0, '預測結果'] = 2  # 更新預測結果，當站點數相同時為 2
 
 # 保存結果為 Excel 檔案
-output_file = r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\第二階段預測增多少_結果.xlsx'
-merged_data.to_excel(output_file, index=False)
-print(f"預測結果已保存到 {output_file}")
+# output_file = r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\第二階段預測增多少_結果.xlsx'
+# merged_data.to_excel(output_file, index=False)
+# print(f"預測結果已保存到 {output_file}")
 
 # 繪製隨機森林中的一顆決策樹
 plt.figure(figsize=(20, 10))

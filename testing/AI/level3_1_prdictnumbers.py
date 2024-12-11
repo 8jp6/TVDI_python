@@ -44,5 +44,5 @@ print("每欄未來新增數量預測：")
 print(predictions_df)
 
 # 如果需要存檔
-output_file_path = r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\每欄未來新增數量預測.xlsx'
-predictions_df.to_excel(output_file_path)
+# output_file_path = r'C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\每欄未來新增數量預測.xlsx'
+# predictions_df.to_excel(output_file_path)
