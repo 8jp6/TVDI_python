@@ -14,25 +14,24 @@ matplotlib.rc("font", family="Microsoft JhengHei")
 file_path = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\202410合併數據.xlsx"
 data = pd.read_excel(file_path)
 
-# Add a new column for the target variable ('新增', '減少', '保持不變')
+# Define classify function
 def classify(row):
     ratio = row['電車登記數'] / row['站點小計'] if row['站點小計'] > 0 else 0
-    if ratio < 95:  # 125 - 30 = 95
+    if ratio < 95:
         return '減少'
-    elif ratio > 155:  # 125 + 30 = 155
+    elif ratio > 155:
         return '新增'
     else:
         return '保持不變'
 
+# Add a new column for the target variable
 data['決策'] = data.apply(classify, axis=1)
 
-# Encode the target variable
-label_map = {'新增': 0, '保持不變': 1, '減少': 2}
-data['決策編碼'] = data['決策'].map(label_map)
+data['比例偏離度'] = abs((data['電車登記數'] / (data['站點小計'].replace(0, 1))) - 125)
 
 # Select features and target
-features = ['2024人口數', '土地面積', '人口密度/平方公里','電車登記數', '站點小計']
-target = '決策編碼'
+features = ['2024人口數', '土地面積', '人口密度/平方公里', '電車登記數', '站點小計', '比例偏離度']
+target = '決策'
 X = data[features]
 y = data[target]
 
@@ -51,6 +50,10 @@ y_pred = rf_model.predict(X_test)
 report = classification_report(y_test, y_pred, target_names=label_map.keys())
 scores = cross_val_score(rf_model, X, y, cv=5)  # 5-fold cross-validation
 accuracy = accuracy_score(y_test, y_pred)
+importances = rf_model.feature_importances_
+for feature, importance in zip(features, importances):
+    print(f"特徵: {feature}, 重要性: {importance:.2f}")
+
 print(f'平均準確度: {scores.mean():.2f}')
 print(f"模型準確率: {accuracy}")
 print(report)
