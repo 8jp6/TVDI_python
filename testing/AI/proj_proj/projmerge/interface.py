@@ -18,6 +18,10 @@ class Window(ThemedTk):
         # 綁定窗口關閉事件
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.new_buttons = [] 
+
+        # 預先計算模型數據
+        self.report, self.scores, self.accuracy = get_model_metrics(rf_model, X, y, label_map)
+
         #============================================================================
         # 左側框架
         self.left_frame = tk.Frame(self)
@@ -54,7 +58,7 @@ class Window(ThemedTk):
         # 右側框架
         self.right_frame = tk.Frame(self)
         # 右側初始圖片
-        self.image = Image.open(r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\proj_proj\imageedit_2_6435805884.jpg")  # 替換成你的圖片路徑
+        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\imageedit_2_6435805884.jpg")  # 替換成你的圖片路徑
         self.photo = ImageTk.PhotoImage(self.image)
         label = tk.Label(self.right_frame, image=self.photo)
         label.pack()
@@ -83,31 +87,31 @@ class Window(ThemedTk):
         self.new_buttons.append(new_button) 
 
     def show_metrics_in_right_frame(self):
-        # 獲取模型數據
-        report, scores, accuracy = get_model_metrics(rf_model, X, y, label_map)
-        df = pd.DataFrame(report).transpose().reset_index()
+        # 將報告轉換為 DataFrame
+        report_df = pd.DataFrame(self.report).transpose().reset_index()
 
         # 清空 right_frame 的舊內容
         for widget in self.right_frame.winfo_children():
             widget.destroy()
 
         # 上方數據摘要
-        summary_text = f"平均準確度: {scores.mean():.2f}\n模型準確率: {accuracy:.2f}\n"
+        summary_text = f"平均準確度: {self.scores.mean():.2f}\n模型準確率: {self.accuracy:.2f}\n"
         summary_label = tk.Label(self.right_frame, text=summary_text, justify="left", font=("Arial", 12))
         summary_label.pack(anchor="w", padx=10, pady=5)
 
         # 創建 Treeview
-        columns = df.columns
+        columns = report_df.columns
         tree = ttk.Treeview(self.right_frame, columns=columns, show="headings")
         for col in columns:
             tree.heading(col, text=col)
             tree.column(col, anchor="center", width=100)
 
         # 插入數據
-        for _, row in df.iterrows():
+        for _, row in report_df.iterrows():
             tree.insert("", "end", values=list(row))
 
         tree.pack(fill="both", expand=True, padx=10, pady=10)
+
 
 
     def reset_ui(self):
@@ -120,7 +124,7 @@ class Window(ThemedTk):
         for widget in self.right_frame.winfo_children():
             widget.destroy()
 
-        self.image = Image.open(r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\proj_proj\imageedit_2_6435805884.jpg")  # 替換成你的圖片路徑
+        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\imageedit_2_6435805884.jpg")  # 替換成你的圖片路徑
         self.photo = ImageTk.PhotoImage(self.image)
         label = tk.Label(self.right_frame, image=self.photo)
         label.pack()

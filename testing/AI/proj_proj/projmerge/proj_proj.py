@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_score
 matplotlib.rc("font", family="Microsoft JhengHei")
 
 # Load the data
-file_path = r"TVDI_python/testing/AI/proj_proj/projmerge/202410合併數據.xlsx"
+file_path = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\projmerge\202410合併數據.xlsx"
 data = pd.read_excel(file_path)
 
 # Add a new column for the target variable ('新增', '減少', '保持不變')
