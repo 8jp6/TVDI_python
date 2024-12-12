@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_score
 matplotlib.rc("font", family="Microsoft JhengHei")
 
 # Load the data
-file_path = r"TVDI_python/testing/AI/proj_proj/202410合併數據.xlsx"
+file_path = r"TVDI_python/testing/AI/proj_proj/projmerge/202410合併數據.xlsx"
 data = pd.read_excel(file_path)
 
 # Add a new column for the target variable ('新增', '減少', '保持不變')
@@ -44,25 +44,44 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 rf_model = RandomForestClassifier(random_state=42,max_depth=3,n_estimators=1000,max_features=5)
 rf_model.fit(X_train, y_train)
 
-# Make predictions
-y_pred = rf_model.predict(X_test)
 
-# Evaluate the model
-report = classification_report(y_test, y_pred, target_names=label_map.keys())
-scores = cross_val_score(rf_model, X, y, cv=5)  # 5-fold cross-validation
-accuracy = accuracy_score(y_test, y_pred)
-print(f'平均準確度: {scores.mean():.2f}')
-print(f"模型準確率: {accuracy}")
-print(report)
+def get_model_metrics(rf_model, X, y, label_map):
+    """
+    計算模型的分類報告和相關數據。
+    """
+    # Make predictions
+    y_pred = rf_model.predict(X_test)
+
+    # Evaluate the model
+    report = classification_report(y_test, y_pred, target_names=label_map.keys(),output_dict=True)
+    scores = cross_val_score(rf_model, X, y, cv=5)  # 5-fold cross-validation
+    accuracy = accuracy_score(y_test, y_pred)
+    return report, scores, accuracy
+
+# print(f'平均準確度: {scores.mean():.2f}')
+# print(f"模型準確率: {accuracy}")
+# print(report)
 
 
 # Visualize one of the trees in the forest
-plt.figure(figsize=(20, 10))
-plot_tree(rf_model.estimators_[0], 
-          feature_names=features, 
-          class_names=list(label_map.keys()), 
-          filled=True, 
-          rounded=True)
-plt.title("森林中的一棵樹", fontsize=16)
-plt.show()
+def draw_decision_tree(model, features, class_names, figsize=(10, 5),fullscreen = False):
+    fig = plt.figure(figsize=figsize)
+    plot_tree(
+        model.estimators_[0],
+        feature_names=features,
+        class_names=class_names,
+        filled=True,
+        rounded=True
+    )
+    plt.title("森林中的一棵樹", fontsize=16)
 
+        # 設置全螢幕
+    if fullscreen:
+        # 設置窗口大小
+        mng = plt.get_current_fig_manager()
+        mng.window.state('zoomed')  # TkAgg 後端中的窗口最大化
+
+    return fig
+
+if __name__ == '__main__':
+    draw_decision_tree(rf_model, features, list(label_map.keys()))

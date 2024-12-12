@@ -23,3 +23,4 @@ pygame
 dash-mantine-components
 openpyxl
 xlrd
+pillow
