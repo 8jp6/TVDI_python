@@ -73,7 +73,7 @@ class Window(ThemedTk):
         self.right_frame = tk.Frame(self)
         #============================================================================
         # 右側初始圖片
-        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\imageedit_2_6435805884.jpg")  # 替換成你的圖片路徑
+        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\gogoro-muji-3-768x439.jpg")  # 替換成你的圖片路徑
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = tk.Label(self.right_frame, image=self.photo)
         self.label.pack()
@@ -179,7 +179,7 @@ class Window(ThemedTk):
             del self.right_top_frame
 
 
-        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\imageedit_2_6435805884.jpg")  # 替換成你的圖片路徑
+        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\gogoro-muji-3-768x439.jpg")  # 替換成你的圖片路徑
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = tk.Label(self.right_frame, image=self.photo)
         self.label.pack()
@@ -303,8 +303,8 @@ class Window(ThemedTk):
     def update_map(self, district):
         """更新地圖以顯示指定行政區的站點"""
 
-        stations_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\原始資料\新Gogoro_站點整理.xlsx"
-        districts_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\原始資料\行政區經緯度.xlsx"
+        stations_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\新Gogoro_站點整理.xlsx"
+        districts_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\行政區經緯度.xlsx"
 
         # 加載數據
         self.stations_data = pd.read_excel(stations_file)
