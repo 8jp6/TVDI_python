@@ -11,7 +11,7 @@ from sklearn.model_selection import cross_val_score
 matplotlib.rc("font", family="Microsoft JhengHei")
 
 # Load the data
-file_path = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\proj_proj\projmerge\202410合併數據.xlsx"
+file_path = r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\proj_proj\projmerge\202410合併數據.xlsx"
 data = pd.read_excel(file_path)
 
 # Add a new column for the target variable ('新增', '減少', '保持不變')
@@ -54,17 +54,24 @@ def get_model_metrics(rf_model, X, y, label_map):
 
     # Evaluate the model
     report = classification_report(y_test, y_pred, target_names=label_map.keys(),output_dict=True)
+    report["accuracy"] = {
+    "precision": None,
+    "recall": None,
+    "f1-score": report["accuracy"],
+    "support": report["macro avg"]["support"]  # 或 weighted avg 的 support
+    }
     scores = cross_val_score(rf_model, X, y, cv=5)  # 5-fold cross-validation
     accuracy = accuracy_score(y_test, y_pred)
+    print(f'平均準確度: {scores.mean():.2f}')
+    print(f"模型準確率: {accuracy}")
+    print(report)
     return report, scores, accuracy
 
-# print(f'平均準確度: {scores.mean():.2f}')
-# print(f"模型準確率: {accuracy}")
-# print(report)
+
 
 
 # Visualize one of the trees in the forest
-def draw_decision_tree(model, features, class_names, figsize=(10, 5),fullscreen = False):
+def draw_decision_tree(model, features, class_names, figsize=(10, 5),fullscreen = True):
     fig = plt.figure(figsize=figsize)
     plot_tree(
         model.estimators_[0],
