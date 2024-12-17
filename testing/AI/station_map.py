@@ -7,8 +7,8 @@ import pandas as pd
 def update_map(self, district):
     """更新地圖以顯示指定行政區的站點"""
 
-    stations_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\新Gogoro_站點整理.xlsx"
-    districts_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\行政區經緯度.xlsx"
+    stations_file = r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\新Gogoro_站點整理.xlsx"
+    districts_file = r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\行政區經緯度.xlsx"
 
     # 加載數據
     self.stations_data = pd.read_excel(stations_file)
