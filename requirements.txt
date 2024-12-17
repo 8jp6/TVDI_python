@@ -24,3 +24,5 @@ dash-mantine-components
 openpyxl
 xlrd
 pillow
+dash-mantine-components
+dash-iconify
