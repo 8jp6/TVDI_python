@@ -113,7 +113,7 @@ class Window(ThemedTk):
             widget.destroy()
 
         # 上方數據摘要
-        summary_text = f"平均準確度: {self.scores.mean():.2f}\n模型準確率: {self.accuracy:.2f}\n"
+        summary_text = f"模型準確率: {self.accuracy:.2f}\n"
         summary_label = tk.Label(self.right_frame, text=summary_text, justify="left", font=("Arial", 12))
         summary_label.pack(anchor="w", padx=10, pady=5)
 
