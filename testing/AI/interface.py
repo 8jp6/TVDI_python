@@ -62,7 +62,7 @@ class Window(ThemedTk):
         self.selected_county = tk.StringVar(self)
         self.selected_county.set("選擇縣市")  # 預設值
         dropdown = ttk.Combobox(self.left_frame, textvariable=self.selected_county, values=self.counties)
-        dropdown.bind("<<ComboboxSelected>>", self.update_radiobuttons)
+        dropdown.bind("<<ComboboxSelected>>", self.update_radiobuttons)        
         dropdown.grid(row=3, column=0, pady=5)
 
         #============================================================================
@@ -73,7 +73,7 @@ class Window(ThemedTk):
         self.right_frame = tk.Frame(self)
         #============================================================================
         # 右側初始圖片
-        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\gogoro-muji-3-768x439.jpg")  # 替換成你的圖片路徑
+        self.image = Image.open(r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\gogoro-muji-3-768x439.jpg")  # 替換成你的圖片路徑
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = tk.Label(self.right_frame, image=self.photo)
         self.label.pack()
@@ -179,7 +179,7 @@ class Window(ThemedTk):
             del self.right_top_frame
 
 
-        self.image = Image.open(r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\gogoro-muji-3-768x439.jpg")  # 替換成你的圖片路徑
+        self.image = Image.open(r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\gogoro-muji-3-768x439.jpg")  # 替換成你的圖片路徑
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = tk.Label(self.right_frame, image=self.photo)
         self.label.pack()
@@ -192,6 +192,10 @@ class Window(ThemedTk):
     def update_radiobuttons(self, event):
         # 清空旧的单选按钮
         for widget in self.radio_frame.winfo_children():
+            widget.destroy()
+
+        # 清空右側框架的舊內容
+        for widget in self.right_frame.winfo_children():
             widget.destroy()
 
         # 获取所选县市
@@ -303,8 +307,8 @@ class Window(ThemedTk):
     def update_map(self, district):
         """更新地圖以顯示指定行政區的站點"""
 
-        stations_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\新Gogoro_站點整理.xlsx"
-        districts_file = r"C:\Users\ASUS\Desktop\GItHub\TVDI_python\testing\AI\行政區經緯度.xlsx"
+        stations_file = r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\新Gogoro_站點整理.xlsx"
+        districts_file = r"C:\Users\user\Desktop\程式在這裡\GitHub\TVDI_python\testing\AI\行政區經緯度.xlsx"
 
         # 加載數據
         self.stations_data = pd.read_excel(stations_file)
