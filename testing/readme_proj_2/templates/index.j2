@@ -1,14 +1,14 @@
 {% extends "_base.j2" %}
-{% block title %}職能發展學院首頁{% endblock %}
+{% block title %}專題首頁{% endblock %}
 
 {% block head %} {{super()}} {% endblock%}
 
 {% block main %}
 <div class="bg-image">
     <div class="container col-xxl-8 px-4 py-5">
-        <div class="row flex-lg-row align-items-center g-5 py-5  offset-lg-4">
-            <div class="col-lg-8">
-                <h1 class="display-5 fw-bold text-white lh-1 mb-3">Responsive left-aligned hero with image</h1>
+        <div class="row flex-lg-row align-items-center g-5 py-5  custom-offset-lg-4-5">
+            <div class="col-lg-9">
+                <h1 class="display-5 fw-bold text-white lh-1 mb-3">Title</h1>
                 <p class="lead">台灣學生常因沉重的課業壓力讀書到深夜，形成惡性循環。長期睡眠不足不僅影響健康，還降低學習效率，亟需調整學習策略與生活節奏，才能在競爭中找到平衡，實現更好的成長與發展。</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 text-white">關我屁事</button>
@@ -45,7 +45,9 @@
         height: 500px;
     }
 
-    .h1{color: white;}
-    .p{color: white;}
+    .custom-offset-lg-4-5 {
+    margin-left: 37.5%; /* 4.5 栏等于 37.5%（每栏为 100% / 12） */
+    }
+
 </style>
 {% endblock %}
