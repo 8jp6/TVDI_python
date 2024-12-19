@@ -19,7 +19,7 @@ radio_data = [
     ['Study_Hours_Per_Day', '學習時間'],
     ['Extracurricular_Hours_Per_Day', '課外活動時間'],
     ['Sleep_Hours_Per_Day', '睡眠時間'],
-    ['Social_Hours_Per_Day', '社交時間'],
+    ['Social_Hours_Per_Day', '社交時間']
     ]
 
 # 準備學生選擇下拉選單數據
@@ -59,12 +59,12 @@ app1.layout = dmc.MantineProvider(
                             dmc.Stack(
                                 [
                                     dmc.RadioGroup(
-                                        children=dmc.Group([dmc.Radio(l, value=k) for k, l in radio_data], my=10),
+                                        children=dmc.Stack([dmc.Radio(l, value=k) for k, l in radio_data], my=10),
                                         id="radio_item",
                                         value=radio_data[0][0],  # 預設選擇第一個選項
                                         label="請選擇查詢的種類",
                                         size="md",
-                                        mb=10,
+                                        mb=10
                                     ),
                                     dmc.Select(
                                         label="請選擇學生",
@@ -153,21 +153,25 @@ def update_table(selected_metric):
         return dmc.Text(f"無法顯示數據，因為欄位 {selected_metric} 不存在")
 
     # 获取所有数据
-    table_data = df[['Student_ID', selected_metric]].to_dict('records')
+    table_data = df[['Student_ID', selected_metric,'Stress_Level']].to_dict('records')
     rows = [
         dmc.TableTr(
-            [dmc.TableTd(record['Student_ID']),
-             dmc.TableTd(record[selected_metric])]
+            [dmc.TableTd(record['Student_ID'], style={"width": "150px"}),
+             dmc.TableTd(record[selected_metric], style={"width": "150px"}),
+             dmc.TableTd(record['Stress_Level'], style={"width": "150px"})
+                         ]
         ) for record in table_data
     ]
 
     head = dmc.TableThead(
-        dmc.TableTr([dmc.TableTh("Student_ID"), dmc.TableTh(selected_metric)])
+        dmc.TableTr([dmc.TableTh("Student_ID", style={"width": "150px"}),
+                     dmc.TableTh(selected_metric, style={"width": "150px"}),
+                     dmc.TableTh("Stress_Level", style={"width": "150px"})])
     )
     body = dmc.TableTbody(rows)
     caption = dmc.TableCaption(f"所有學生的 {selected_metric} 統計數據")
     table = dmc.Table([head, body, caption])
-    return table,0
+    return table
 
 
 

@@ -112,6 +112,21 @@
         .bd-mode-toggle .dropdown-menu .active .bi {
             display: block !important;
         }
+
+        .form-group {
+            margin-bottom: 1em;
+            display: flex;
+            align-items: center;
+          }
+          .form-group label {
+            width: 100px;
+            font-weight: bold;
+          }
+          .form-group select, .form-group input {
+            flex: 1;
+            padding: 0.5em;
+            font-size: 1em;
+          }
     </style>
 
 
@@ -277,7 +292,7 @@
     </svg>
 
     <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">Company name</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">今日使用路段</a>
 
         <ul class="navbar-nav flex-row d-md-none">
             <li class="nav-item text-nowrap">
@@ -311,7 +326,7 @@
                 <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu"
                     aria-labelledby="sidebarMenuLabel">
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="sidebarMenuLabel">Company name</h5>
+                        <h5 class="offcanvas-title" id="sidebarMenuLabel">今日使用路段</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
                             data-bs-target="#sidebarMenu" aria-label="Close"></button>
                     </div>
@@ -322,7 +337,7 @@
                                     <svg class="bi">
                                         <use xlink:href="#house-fill"></use>
                                     </svg>
-                                    Dashboard
+                                    儀錶板
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -330,87 +345,27 @@
                                     <svg class="bi">
                                         <use xlink:href="#file-earmark"></use>
                                     </svg>
-                                    Orders
+                                    使用路段資料
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                                     <svg class="bi">
-                                        <use xlink:href="#cart"></use>
+                                        <use href="#puzzle"></use>
                                     </svg>
-                                    Products
+                                    地圖
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2" href="#">
                                     <svg class="bi">
-                                        <use xlink:href="#people"></use>
+                                        <use xlink:href="#list"></use>
                                     </svg>
-                                    Customers
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#graph-up"></use>
-                                    </svg>
-                                    Reports
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#puzzle"></use>
-                                    </svg>
-                                    Integrations
+                                    其他功能
                                 </a>
                             </li>
                         </ul>
-
-                        <h6
-                            class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-                            <span>Saved reports</span>
-                            <a class="link-secondary" href="#" aria-label="Add a new report">
-                                <svg class="bi">
-                                    <use xlink:href="#plus-circle"></use>
-                                </svg>
-                            </a>
-                        </h6>
-                        <ul class="nav flex-column mb-auto">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"></use>
-                                    </svg>
-                                    Current month
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"></use>
-                                    </svg>
-                                    Last quarter
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"></use>
-                                    </svg>
-                                    Social engagement
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"></use>
-                                    </svg>
-                                    Year-end sale
-                                </a>
-                            </li>
-                        </ul>
-
+                    
                         <hr class="my-3">
 
                         <ul class="nav flex-column mb-auto">
@@ -419,7 +374,7 @@
                                     <svg class="bi">
                                         <use xlink:href="#gear-wide-connected"></use>
                                     </svg>
-                                    Settings
+                                    設定
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -427,7 +382,7 @@
                                     <svg class="bi">
                                         <use xlink:href="#door-closed"></use>
                                     </svg>
-                                    Sign out
+                                    登出
                                 </a>
                             </li>
                         </ul>
@@ -438,7 +393,7 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
+                    <h1 class="h2">Dash Board</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
@@ -453,9 +408,32 @@
                         </button>
                     </div>
                 </div>
-
+                <form>
+                    <!-- 行政區 -->
+                    <div class="form-group">
+                      <label for="district">行政區:</label>
+                      <select id="district" name="district">
+                        <option value="">請選擇行政區</option>
+                        <option value="district1">行政區1</option>
+                        <option value="district2">行政區2</option>
+                        <option value="district3">行政區3</option>
+                      </select>
+                    </div>
+                
+                    <!-- 地址 -->
+                    <div class="form-group">
+                      <label for="address">地址:</label>
+                      <input type="text" id="address" name="address" readonly value="" />
+                    </div>
+                
+                    <!-- 日期 -->
+                    <div class="form-group">
+                      <label for="date">日期:</label>
+                      <input type="text" id="date" name="date" readonly value="" />
+                    </div>
+                  </form>
                 <canvas class="my-4 w-100" id="myChart" width="1514" height="639"
-                    style="display: block; box-sizing: border-box; height: 456px; width: 1081px;"></canvas>
+                    style="display: block; box-sizing: border-box; height: 456px; width: 1081px; border:black solid 3px"></canvas>
 
                 <h2>Section title</h2>
                 <div class="table-responsive small">
