@@ -1,4 +1,6 @@
 from dash import Dash, html, dcc, callback, Input, Output,_dash_renderer
+import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
@@ -18,10 +20,7 @@ radio_data = [
     ['Extracurricular_Hours_Per_Day', '課外活動時間'],
     ['Sleep_Hours_Per_Day', '睡眠時間'],
     ['Social_Hours_Per_Day', '社交時間'],
-    ['Physical_Activity_Hours_Per_Day', '體育活動時間'],
-    ['GPA', '平均成績'],
-    ['Stress_Level', '壓力水平']
-]
+    ]
 
 # 準備學生選擇下拉選單數據
 selected_data = [{'value': value, 'label': value} for value in df['Student_ID'].unique()]
@@ -90,20 +89,9 @@ app1.layout = dmc.MantineProvider(
                         justify={"base": "center"},
                     ),
                     dmc.Container(
-                        dmc.LineChart(
-                            id='lineChart',
-                            h=300,
-                            dataKey="Student_ID",
-                            data=[],  # 初始設為空數據
-                            series=[],
-                            curveType="bump",
-                            tickLine="xy",
-                            withXAxis=True,
-                            withDots=True,
-                            gridAxis='x',
-                            withLegend=True,
-                            xAxisLabel='學生編號'
-                        ),
+                        dcc.Graph(
+                            id='barChart',
+                            style={'height': '400px'}),
                         my=50
                     )
                 ],
@@ -115,47 +103,57 @@ app1.layout = dmc.MantineProvider(
 
 # 更新圖表的回調函數
 @callback(
-    [Output('lineChart', 'data'),
-     Output('lineChart', 'series')],
-    [Input('dropdown-selection', 'value'),
-     Input('radio_item', 'value')]
+    Output('barChart', 'figure'),  # 修改為 barChart 的 figure
+    Input('radio_item', 'value')  # 選擇的數據指標
 )
-def update_graph(student_id, selected_metric):
-    # 同時處理 student_id 或 selected_metric 為 None 的情況
-    if not student_id or not selected_metric:
-        return [], []
+def update_graph(selected_metric):
+    if not selected_metric:
+        # 如果沒有選擇任何指標，返回空白圖表
+        return px.bar(title="無數據可顯示")
 
-    dff = df[df['Student_ID'] == student_id]
-    if dff.empty:
-        return [], []
+    # 使用 Plotly Express 繪製長條圖
+    fig = px.bar(
+        df,
+        x='Student_ID',  # X 軸為學生 ID
+        y=selected_metric,  # Y 軸為選擇的數據指標
+        title=f"學生的 {selected_metric} 數據",
+        labels={'Student_ID': '學生 ID', selected_metric: '數值'}
+    )
 
-    # 確保 selected_metric 存在於數據框中
-    if selected_metric not in dff.columns:
-        return [], []
-
-    data_to_plot = dff[['Student_ID', selected_metric]].to_dict('records')
-    label = f'{student_id} 的 {selected_metric}'
-    series = [{"name": selected_metric, "label": label, "color": "indigo.6"}]
-    return data_to_plot, series
-
+    # 美化圖表
+    fig.update_layout(
+        xaxis=dict(
+            title="學生 ID",
+            tickmode="linear",
+            tickangle=-45,
+            dtick=1,
+            range=[1-0.5, 50 + 0.5] 
+        ),
+        yaxis=dict(
+            title="小時"
+        ),
+        template="plotly_white",
+        title_x=0.5,  # 标题居中
+        height=500  # 固定图表高度
+    )
+    fig.update_traces(textfont_size=12, textangle=45, textposition="outside", cliponaxis=False)
+    return fig
 
 @callback(
     Output('scrollarea', 'children'),
-    [Input('dropdown-selection', 'value'),
-     Input('radio_item', 'value')]
+    [Input('radio_item', 'value')]  # 仅根据选定的指标更新表格
 )
-def update_table(student_id, selected_metric):
-    if not student_id or not selected_metric:
-        return dmc.Text("未選擇學生或指標")
 
-    dff = df[df['Student_ID'] == student_id]
-    if dff.empty:
-        return dmc.Text(f"無數據可顯示")
+def update_table(selected_metric):
+    if not selected_metric:
+        return dmc.Text("未選擇指標")
 
-    if selected_metric not in dff.columns:
+    # 检查指标是否存在于数据列中
+    if selected_metric not in df.columns:
         return dmc.Text(f"無法顯示數據，因為欄位 {selected_metric} 不存在")
 
-    table_data = dff[['Student_ID', selected_metric]].to_dict('records')
+    # 获取所有数据
+    table_data = df[['Student_ID', selected_metric]].to_dict('records')
     rows = [
         dmc.TableTr(
             [dmc.TableTd(record['Student_ID']),
@@ -167,8 +165,9 @@ def update_table(student_id, selected_metric):
         dmc.TableTr([dmc.TableTh("Student_ID"), dmc.TableTh(selected_metric)])
     )
     body = dmc.TableTbody(rows)
-    caption = dmc.TableCaption(f"{student_id} 的 {selected_metric} 統計數據")
-    return dmc.Table([head, body, caption])
+    caption = dmc.TableCaption(f"所有學生的 {selected_metric} 統計數據")
+    table = dmc.Table([head, body, caption])
+    return table,0
 
 
 
