@@ -48,6 +48,8 @@ def pricing():
                             total_pages=total_pages,
                             page = page) 
 
+
+
 @app.route("/about")
 def about():
     return render_template('about.j2')
@@ -56,5 +58,6 @@ def about():
 def success():
     return "<h1>登入成功</h1>"
 
-if __name__ == "__main__":
+print(__name__)
+if __name__ == "__main__":    
     run_simple("localhost", 8080, application,use_debugger=True,use_reloader=True)
